@@ -1,22 +1,22 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-let cashed = (global as any).mongoose || {conn: null, promise: null}
+let cached = (global as any).mongoose || { conn: null, promise: null };
 
-const connectToDatabase = async () => {
-  if(cashed.conn) return cashed.conn;
+export const connectToDatabase = async () => {
+  if (cached.conn) return cached.conn;
 
-  if(!MONGODB_URI) throw new Error('MONGODB_URI is missing');
+  if (!MONGODB_URI) throw new Error("MONGODB_URI is missing");
 
-  cashed.promise = cashed.promise || mongoose.connect(MONGODB_URI, {
-    dbName: "maro-events",
-    bufferCommands: false,
-  })
+  cached.promise =
+    cached.promise ||
+    mongoose.connect(MONGODB_URI, {
+      dbName: "evently",
+      bufferCommands: false,
+    });
 
-  cashed.conn = await cashed.promise;
+  cached.conn = await cached.promise;
 
-  return cashed.conn;
-}
-
-export default connectToDatabase;
+  return cached.conn;
+};
